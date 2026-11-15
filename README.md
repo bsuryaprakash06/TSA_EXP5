@@ -63,7 +63,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-### OUTPUT:
+# OUTPUT:
 
 ### Original Data
 <img width="1852" height="385" alt="{Original Data}" src="https://github.com/user-attachments/assets/709494ec-bc96-4fe9-9ec3-8a919b270bf6" />
