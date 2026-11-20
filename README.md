@@ -1,70 +1,90 @@
-# Time Series Classical Seasonal Decomposition
+# Ex.No: 05 IMPLEMENTATION OF TIME SERIES ANALYSIS AND DECOMPOSITION
 
-An analytical implementation of classical additive time series decomposition utilizing moving-average trend filtering, seasonal period extraction, and residual noise analysis with Statsmodels.
+### Date: 15 - 11 - 2026
 
----
+# AIM:
+To perform classical time series decomposition on daily temperature data into trend, seasonal, and residual components.
 
-## Objective
-
-Deconstruct an empirical time series into its distinct constituent components:
-- **Secular Trend (T)**: Long-term progression of the series.
-- **Seasonal Cycle (S)**: Recurring periodic fluctuations over a fixed frequency.
-- **Residual Noise (R)**: Irregular, stochastic variation remaining after removing trend and seasonality.
-
----
-
-## Dataset Utilized
-
+# DATASET:
 - **Dataset Name**: Daily Minimum Temperatures in Melbourne
 - **Filename**: `daily-min-temperatures.csv`
-- **Domain**: Climatology / Meteorology
-- **Temporal Resolution**: Daily records from January 1, 1981 through December 31, 1990 (3,650 time points)
-- **Target Variable**: `Temp` (Daily minimum temperature in Celsius, °C)
-- **Periodicity (m)**: 365 calendar days (annual meteorological seasonal cycle)
+- **Periodicity**: 365 days (annual seasonality)
 
----
+# ALGORITHM:
+1. Import the required packages like pandas, numpy, and matplotlib.
+2. Read the time series data using pandas and set Date as index.
+3. Perform additive seasonal decomposition using `seasonal_decompose(data['Temp'], model='additive', period=365)`:
+   - Observed Series: Y(t) = T(t) + S(t) + R(t)
+   - Trend Component: T(t) via moving average filter
+   - Seasonal Component: S(t) via annual cycle extraction
+   - Residual Noise: R(t) = Y(t) - T(t) - S(t)
+4. Plot the decomposition subplots for observed, trend, seasonal, and residual series.
+5. Display the overall results.
 
-## Mathematical Formulation
+# PROGRAM:
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-The classical additive decomposition model assumes the observed value Y(t) is the sum of independent components:
+from statsmodels.tsa.seasonal import seasonal_decompose
 
-$$Y(t) = T(t) + S(t) + R(t)$$
+# Step 1: Load the dataset and set Date as index
+url = 'https://raw.githubusercontent.com/jbrownlee/Datasets/master/daily-min-temperatures.csv'
 
-### 1. Trend Estimation: T(t)
-Estimated using a two-sided symmetric moving average filter of span equal to the seasonal period (m = 365):
+data = pd.read_csv(url, parse_dates=['Date'], index_col='Date')
 
-$$T(t) = \frac{1}{m} \sum_{j=-(m-1)/2}^{(m-1)/2} Y(t+j)$$
+# Step 2: Perform seasonal decomposition
+decomposition = seasonal_decompose(
+    data['Temp'],
+    model='additive',
+    period=365
+)
 
-### 2. Seasonal Component: S(t)
-Computed by averaging the detrended values Y(t) - T(t) for each corresponding calendar day across all 10 sample years and centering around zero:
+# Step 3: Plot the decomposition
+plt.figure(figsize=(12, 10))
 
-$$\sum_{j=1}^m S(j) = 0$$
+# Original Data
+plt.subplot(411)
+plt.plot(data['Temp'], label='Daily Temperatures')
+plt.legend(loc='upper left')
+plt.title('Original Time Series Data')
 
-### 3. Residual Irregular Component: R(t)
-The remaining unexplained variation after removing trend and seasonality:
+# Trend Plot
+plt.subplot(412)
+plt.plot(decomposition.trend, label='Trend', color='orange')
+plt.legend(loc='upper left')
+plt.title('Trend Plot')
 
-$$R(t) = Y(t) - T(t) - S(t)$$
+# Seasonal Plot
+plt.subplot(413)
+plt.plot(decomposition.seasonal, label='Seasonal', color='green')
+plt.legend(loc='upper left')
+plt.title('Seasonality Plot')
 
-In a well-specified decomposition, R(t) approximates a zero-mean stationary white noise process.
+# Residual Plot
+plt.subplot(414)
+plt.plot(decomposition.resid, label='Residual', color='red')
+plt.legend(loc='upper left')
+plt.title('Residual Plot')
 
----
+plt.tight_layout()
+plt.show()
+```
 
-## Results & Decomposition Visualizations
+# OUTPUT:
 
-### 1. Original Observed Time Series: Y(t)
-<img width="1852" height="385" alt="Original Time Series" src="https://github.com/user-attachments/assets/709494ec-bc96-4fe9-9ec3-8a919b270bf6" />
+### Original Data
+<img width="1852" height="385" alt="{Original Data}" src="https://github.com/user-attachments/assets/709494ec-bc96-4fe9-9ec3-8a919b270bf6" />
 
-### 2. Extracted Secular Trend: T(t)
-<img width="1851" height="380" alt="Extracted Trend Component" src="https://github.com/user-attachments/assets/d350d0a0-1c7e-49cd-9461-d749d31b4026" />
+### Trend Plot
+<img width="1851" height="380" alt="{Trend Plot}" src="https://github.com/user-attachments/assets/d350d0a0-1c7e-49cd-9461-d749d31b4026" />
 
-### 3. Annual Seasonal Periodicity: S(t)
-<img width="1851" height="377" alt="Extracted Seasonal Component" src="https://github.com/user-attachments/assets/9c7cc77e-15c2-4a76-944a-3d6ed42f7c49" />
+### Seasonal Plot
+<img width="1851" height="377" alt="{Seasonal Plot}" src="https://github.com/user-attachments/assets/9c7cc77e-15c2-4a76-944a-3d6ed42f7c49" />
 
-### 4. Residual Irregular Fluctuations: R(t)
-<img width="1852" height="388" alt="Extracted Residual Noise" src="https://github.com/user-attachments/assets/66115c65-ac50-4055-8856-2861a30e6831" />
+### Residual Plot
+<img width="1852" height="388" alt="{Residual Plot}" src="https://github.com/user-attachments/assets/66115c65-ac50-4055-8856-2861a30e6831" />
 
----
-
-## License
-
-This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
+# RESULT:
+Thus, the Python code for time series analysis and decomposition has been executed successfully.
